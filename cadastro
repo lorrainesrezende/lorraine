@@ -1,0 +1,230 @@
+<?php
+
+//<fileHeader>
+
+//</fileHeader>
+
+class NewTable1Form extends TPage
+{
+    protected $form;
+    private $formFields = [];
+    private static $database = 'cadastro_anvisa';
+    private static $activeRecord = 'NewTable1';
+    private static $primaryKey = 'id';
+    private static $formName = 'form_NewTable1';
+
+    //<classProperties>
+
+    //</classProperties>
+
+    /**
+     * Form constructor
+     * @param $param Request
+     */
+    public function __construct( $param )
+    {
+        parent::__construct();
+
+        // creates the form
+        $this->form = new BootstrapFormBuilder(self::$formName);
+        // define the form title
+        $this->form->setFormTitle("Cadastro");
+
+        //<onBeginPageCreation>
+
+        //</onBeginPageCreation>
+
+        $id = new TEntry('id');
+        $numero_registro = new TEntry('numero_registro');
+        $medicamento = new TEntry('medicamento');
+        $data_validade = new TEntry('data_validade');
+        $telefone_sac = new TEntry('telefone_sac');
+        $preco = new TEntry('preco');
+        $quantidade_comprimidos = new TEntry('quantidade_comprimidos');
+        $fabricante = new TEntry('fabricante');
+        $reacoes_adversas = new TEntry('reacoes_adversas');
+
+        $numero_registro->addValidation("Numero registro", new TRequiredValidator()); 
+        $medicamento->addValidation("Medicamento", new TRequiredValidator()); 
+        $data_validade->addValidation("Data validade", new TRequiredValidator()); 
+        $telefone_sac->addValidation("Telefone sac", new TRequiredValidator()); 
+        $preco->addValidation("Preco", new TRequiredValidator()); 
+        $quantidade_comprimidos->addValidation("Quantidade comprimidos", new TRequiredValidator()); 
+        $fabricante->addValidation("Fabricante", new TRequiredValidator()); 
+        $reacoes_adversas->addValidation("Reacoes adversas", new TRequiredValidator()); 
+
+        $id->setEditable(false);
+
+        $id->setMaxLength(10);
+        $medicamento->setMaxLength(50);
+        $telefone_sac->setMaxLength(50);
+        $data_validade->setMaxLength(50);
+        $quantidade_comprimidos->setMaxLength(50);
+
+        $id->setSize(100);
+        $preco->setSize('100%');
+        $fabricante->setSize('100%');
+        $medicamento->setSize('100%');
+        $telefone_sac->setSize('100%');
+        $data_validade->setSize('100%');
+        $numero_registro->setSize('100%');
+        $reacoes_adversas->setSize('100%');
+        $quantidade_comprimidos->setSize('100%');
+
+        //<onBeforeAddFieldsToForm>
+
+        //</onBeforeAddFieldsToForm>
+        $row1 = $this->form->addFields([new TLabel("Id:", null, '14px', null)],[$id]);
+        $row2 = $this->form->addFields([new TLabel("Numero registro:", '#ff0000', '14px', null)],[$numero_registro]);
+        $row3 = $this->form->addFields([new TLabel("Medicamento:", '#ff0000', '14px', null)],[$medicamento]);
+        $row4 = $this->form->addFields([new TLabel("Data validade:", '#ff0000', '14px', null)],[$data_validade]);
+        $row5 = $this->form->addFields([new TLabel("Telefone sac:", '#ff0000', '14px', null)],[$telefone_sac]);
+        $row6 = $this->form->addFields([new TLabel("Preco:", '#ff0000', '14px', null)],[$preco]);
+        $row7 = $this->form->addFields([new TLabel("Quantidade comprimidos:", '#ff0000', '14px', null)],[$quantidade_comprimidos]);
+        $row8 = $this->form->addFields([new TLabel("Fabricante:", '#ff0000', '14px', null)],[$fabricante]);
+        $row9 = $this->form->addFields([new TLabel("Reacoes adversas:", '#ff0000', '14px', null)],[$reacoes_adversas]);
+
+        //<onAfterFieldsCreation>
+
+        //</onAfterFieldsCreation>
+
+        // create the form actions
+        $btn_onsave = $this->form->addAction("Salvar", new TAction([$this, 'onSave']), 'fas:save #ffffff');
+        $btn_onsave->addStyleClass('btn-primary'); 
+
+        $btn_onclear = $this->form->addAction("Limpar formulário", new TAction([$this, 'onClear']), 'fas:eraser #dd5a43');
+
+        // vertical box container
+        $container = new TVBox;
+        $container->style = 'width: 100%';
+        $container->class = 'form-container';
+        $container->add(TBreadCrumb::create(["Básico","Cadastro"]));
+        $container->add($this->form);
+
+        //<onAfterPageCreation>
+
+        //</onAfterPageCreation>
+
+        parent::add($container);
+
+    }
+
+//<generated-FormAction-onSave>
+    public function onSave($param = null) 
+    {
+        try
+        {
+            TTransaction::open(self::$database); // open a transaction
+
+            /**
+            // Enable Debug logger for SQL operations inside the transaction
+            TTransaction::setLogger(new TLoggerSTD); // standard output
+            TTransaction::setLogger(new TLoggerTXT('log.txt')); // file
+            **/
+
+            $messageAction = null;
+
+            $this->form->validate(); // validate form data
+
+            $object = new NewTable1(); // create an empty object //</blockLine>
+
+            $data = $this->form->getData(); // get form data as array
+            $object->fromArray( (array) $data); // load the object with data
+
+            //</beforeStoreAutoCode> //</blockLine>
+
+            $object->store(); // save the object //</blockLine>
+
+            //</afterStoreAutoCode> //</blockLine>
+
+            // get the generated {PRIMARY_KEY}
+            $data->id = $object->id; //</blockLine>
+
+            $this->form->setData($data); // fill form data
+            TTransaction::close(); // close the transaction
+
+            /**
+            // To define an action to be executed on the message close event:
+            $messageAction = new TAction(['className', 'methodName']);
+            **/
+
+            //</messageAutoCode> //</blockLine>
+//<generatedAutoCode>
+            new TMessage('info', "Registro salvo", $messageAction);
+//</generatedAutoCode>
+
+            //</endTryAutoCode> //</blockLine>
+
+        }
+        catch (Exception $e) // in case of exception
+        {
+            //</catchAutoCode> //</blockLine>
+
+            new TMessage('error', $e->getMessage()); // shows the exception error message
+            $this->form->setData( $this->form->getData() ); // keep form data
+            TTransaction::rollback(); // undo all pending operations
+        }
+    }
+//</generated-FormAction-onSave>
+
+//<generated-onEdit>
+    public function onEdit( $param )//</ini>
+    {
+        try
+        {
+            if (isset($param['key']))
+            {
+                $key = $param['key'];  // get the parameter $key
+                TTransaction::open(self::$database); // open a transaction
+
+                $object = new NewTable1($key); // instantiates the Active Record //</blockLine>
+
+                //</beforeSetDataAutoCode> //</blockLine>
+
+                $this->form->setData($object); // fill the form //</blockLine>
+
+                //</afterSetDataAutoCode> //</blockLine>
+                TTransaction::close(); // close the transaction 
+            }
+            else
+            {
+                $this->form->clear();
+            }
+        }
+        catch (Exception $e) // in case of exception
+        {
+            new TMessage('error', $e->getMessage()); // shows the exception error message
+            TTransaction::rollback(); // undo all pending operations
+        }
+    }//</end>
+//</generated-onEdit>
+
+    /**
+     * Clear form data
+     * @param $param Request
+     */
+    public function onClear( $param )
+    {
+        $this->form->clear(true);
+
+        //<onFormClear>
+
+        //</onFormClear>
+
+    }
+
+    public function onShow($param = null)
+    {
+
+        //<onShow>
+
+        //</onShow>
+    } 
+
+    //</hideLine> <addUserFunctionsCode/>
+
+    //<userCustomFunctions>
+
+    //</userCustomFunctions>
+
+}
